@@ -1,6 +1,5 @@
 import sqlite3
 from datetime import date, datetime
-from typing import Optional
 
 import pytz
 from langchain_core.runnables import RunnableConfig
@@ -39,7 +38,7 @@ def fetch_user_flight_information(config: RunnableConfig) -> list[dict]:
     cursor.execute(query, (passenger_id,))
     rows = cursor.fetchall()
     column_names = [column[0] for column in cursor.description]
-    results = [dict(zip(column_names, row)) for row in rows]
+    results = [dict(zip(column_names, row, strict=False)) for row in rows]
 
     cursor.close()
     conn.close()
@@ -49,10 +48,10 @@ def fetch_user_flight_information(config: RunnableConfig) -> list[dict]:
 
 @tool
 def search_flights(
-    departure_airport: Optional[str] = None,
-    arrival_airport: Optional[str] = None,
-    start_time: Optional[date | datetime] = None,
-    end_time: Optional[date | datetime] = None,
+    departure_airport: str | None = None,
+    arrival_airport: str | None = None,
+    start_time: date | datetime | None = None,
+    end_time: date | datetime | None = None,
     limit: int = 20,
 ) -> list[dict]:
     """Search for flights based on departure airport, arrival airport, and departure time range."""
@@ -82,7 +81,7 @@ def search_flights(
     cursor.execute(query, params)
     rows = cursor.fetchall()
     column_names = [column[0] for column in cursor.description]
-    results = [dict(zip(column_names, row)) for row in rows]
+    results = [dict(zip(column_names, row, strict=False)) for row in rows]
 
     cursor.close()
     conn.close()
@@ -113,7 +112,7 @@ def update_ticket_to_new_flight(
         conn.close()
         return "Invalid new flight ID provided."
     column_names = [column[0] for column in cursor.description]
-    new_flight_dict = dict(zip(column_names, new_flight))
+    new_flight_dict = dict(zip(column_names, new_flight, strict=False))
     timezone = pytz.timezone("Etc/GMT-3")
     current_time = datetime.now(tz=timezone)
     departure_time = datetime.strptime(

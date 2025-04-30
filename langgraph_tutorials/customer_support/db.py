@@ -1,4 +1,10 @@
-"""Utilities for the customer support use case."""
+"""Database utilities for the customer support application.
+
+This module handles database initialization, updates, and maintenance for the
+customer support system. It downloads a SQLite database if needed and provides
+functionality to update flight dates to current time.
+"""
+
 import os
 import shutil
 import sqlite3
@@ -6,11 +12,14 @@ import sqlite3
 import pandas as pd
 import requests
 
+# Database configuration
 db_url = "https://storage.googleapis.com/benchmarks-artifacts/travel-db/travel2.sqlite"
 local_file = "travel2.sqlite"
 # The backup lets us restart for each tutorial section
 backup_file = "travel2.backup.sqlite"
 overwrite = False
+
+# Download database if needed
 if overwrite or not os.path.exists(local_file):
     response = requests.get(db_url)
     response.raise_for_status()  # Ensure the request was successful
@@ -20,8 +29,24 @@ if overwrite or not os.path.exists(local_file):
     shutil.copy(local_file, backup_file)
 
 
-# Convert the flights to present time for our tutorial
 def update_dates(file):
+    """Updates flight and booking dates to current time.
+
+    Creates a fresh copy of the database from backup and updates all datetime
+    fields to be relative to the current date, maintaining the same relative
+    time differences from the original data.
+
+    Args:
+        file (str): Path to the database file to update
+
+    Returns:
+        str: Path to the updated database file
+
+    Note:
+        This function modifies the following tables:
+        - flights: Updates scheduled/actual departure/arrival times
+        - bookings: Updates booking dates
+    """
     shutil.copy(backup_file, file)
     conn = sqlite3.connect(file)
     tables = pd.read_sql(
