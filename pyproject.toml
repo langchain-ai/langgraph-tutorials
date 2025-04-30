@@ -5,7 +5,11 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "langchain-core>=0.3.56",
     "langgraph>=0.4.1",
+    "openai>=1.76.2",
+    "pandas>=2.2.3",
+    "requests>=2.32.3",
 ]
 
 [dependency-groups]
