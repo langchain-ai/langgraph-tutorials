@@ -113,9 +113,12 @@ class DatabaseManager:
         # potential users. This is not meant to be production code, but
         # rather a tutorial example.
         if not os.path.exists(self.dirty_file):
-            raise FileNotFoundError(
+            msg = (
                 f"The dirty database file '{self.dirty_file}' does not exist.\n"
                 f"Please run 'manager.initialize()' first to set up the database."
+            )
+            raise FileNotFoundError(
+                msg
             )
         conn: sqlite3.Connection = sqlite3.connect(self.dirty_file)
         cursor: sqlite3.Cursor = conn.cursor()

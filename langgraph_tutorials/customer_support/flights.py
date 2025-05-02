@@ -13,20 +13,21 @@ def fetch_user_flight_information(config: RunnableConfig) -> list[dict]:
     configuration = config.get("configurable", {})
     passenger_id = configuration.get("passenger_id")
     if not passenger_id:
-        raise ValueError("No passenger ID configured.")
+        msg = "No passenger ID configured."
+        raise ValueError(msg)
 
     with DB.get_cursor() as cursor:
         query = """
-        SELECT 
+        SELECT
             t.ticket_no, t.book_ref,
             f.flight_id, f.flight_no, f.departure_airport, f.arrival_airport, f.scheduled_departure, f.scheduled_arrival,
             bp.seat_no, tf.fare_conditions
-        FROM 
+        FROM
             tickets t
             JOIN ticket_flights tf ON t.ticket_no = tf.ticket_no
             JOIN flights f ON tf.flight_id = f.flight_id
             JOIN boarding_passes bp ON bp.ticket_no = t.ticket_no AND bp.flight_id = f.flight_id
-        WHERE 
+        WHERE
             t.passenger_id = ?
         """
         cursor.execute(query, (passenger_id,))
@@ -79,7 +80,8 @@ def update_ticket_to_new_flight(
     configuration = config.get("configurable", {})
     passenger_id = configuration.get("passenger_id")
     if not passenger_id:
-        raise ValueError("No passenger ID configured.")
+        msg = "No passenger ID configured."
+        raise ValueError(msg)
 
     with DB.get_cursor() as cursor:
         cursor.execute(
@@ -132,7 +134,8 @@ def cancel_ticket(ticket_no: str, *, config: RunnableConfig) -> str:
     configuration = config.get("configurable", {})
     passenger_id = configuration.get("passenger_id")
     if not passenger_id:
-        raise ValueError("No passenger ID configured.")
+        msg = "No passenger ID configured."
+        raise ValueError(msg)
 
     with DB.get_cursor() as cursor:
         cursor.execute(

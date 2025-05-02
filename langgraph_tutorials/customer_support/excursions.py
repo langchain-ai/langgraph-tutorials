@@ -1,5 +1,4 @@
-"""Information about excursions"""
-
+"""Information about excursions."""
 
 from langgraph_tutorials.customer_support.db import DB
 

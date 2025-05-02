@@ -10,7 +10,7 @@ import numpy as np
 import requests
 from langchain.embeddings import init_embeddings
 from langchain_core.embeddings import Embeddings
-from langchain_core.tools import tool
+from langchain_core.tools import BaseTool, tool
 
 
 class PolicyRetriever:
@@ -32,8 +32,9 @@ class PolicyRetriever:
         elif isinstance(embedding_model, Embeddings):
             self._model = embedding_model
         else:
+            msg = "embedding must be an Embeddings instance or a model name string"
             raise ValueError(
-                "embedding must be an Embeddings instance or a model name string"
+                msg
             )
 
         self._docs: list[dict] | None = None
@@ -76,9 +77,12 @@ class PolicyRetriever:
             # run an empty retriever by mistake.
             # So while this is not a good practice in production (as an empty index
             # is a valid state), we raise an error here to prevent misuse.
-            raise RuntimeError(
+            msg = (
                 "Retriever is not initialized. "
                 "Please call retriever.initialize() first."
+            )
+            raise RuntimeError(
+                msg
             )
 
         query_vector = np.array(self._model.embed_query(query))
@@ -90,7 +94,7 @@ class PolicyRetriever:
             {**self._docs[idx], "similarity": scores[idx]} for idx in top_k_idx_sorted
         ]
 
-    def as_tool(self, k: int = 2):
+    def as_tool(self, k: int = 2) -> BaseTool:
         """Return a LangChain tool for looking up policy information.
 
         Args:
