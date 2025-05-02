@@ -10,8 +10,8 @@ meant for production use.
 import os
 import shutil
 import sqlite3
+from collections.abc import Generator
 from contextlib import contextmanager
-from typing import Generator, Optional
 
 import pandas as pd
 import requests
@@ -68,7 +68,7 @@ class DatabaseManager:
             t: pd.read_sql(f"SELECT * FROM {t}", conn) for t in tables
         }
 
-        flights: Optional[pd.DataFrame] = dataframes.get("flights")
+        flights: pd.DataFrame | None = dataframes.get("flights")
         if flights is not None:
             example_time = pd.to_datetime(
                 flights["actual_departure"].replace("\\N", pd.NaT)
@@ -86,7 +86,7 @@ class DatabaseManager:
                     pd.to_datetime(flights[col].replace("\\N", pd.NaT)) + time_diff
                 )
 
-        bookings: Optional[pd.DataFrame] = dataframes.get("bookings")
+        bookings: pd.DataFrame | None = dataframes.get("bookings")
         if bookings is not None:
             bookings["book_date"] = (
                 pd.to_datetime(bookings["book_date"].replace("\\N", pd.NaT), utc=True)
