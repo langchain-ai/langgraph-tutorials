@@ -85,7 +85,9 @@ def update_ticket_to_new_flight(
 
     with DB.get_cursor() as cursor:
         cursor.execute(
-            "SELECT departure_airport, arrival_airport, scheduled_departure FROM flights WHERE flight_id = ?",
+            "SELECT departure_airport, arrival_airport, scheduled_departure "
+            "FROM flights "
+            "WHERE flight_id = ?",
             (new_flight_id,),
         )
         new_flight = cursor.fetchone()

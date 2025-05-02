@@ -33,9 +33,7 @@ class PolicyRetriever:
             self._model = embedding_model
         else:
             msg = "embedding must be an Embeddings instance or a model name string"
-            raise ValueError(
-                msg
-            )
+            raise TypeError(msg)
 
         self._docs: list[dict] | None = None
         self._arr: np.ndarray | None = None
@@ -81,9 +79,7 @@ class PolicyRetriever:
                 "Retriever is not initialized. "
                 "Please call retriever.initialize() first."
             )
-            raise RuntimeError(
-                msg
-            )
+            raise RuntimeError(msg)
 
         query_vector = np.array(self._model.embed_query(query))
         scores = query_vector @ self._arr.T

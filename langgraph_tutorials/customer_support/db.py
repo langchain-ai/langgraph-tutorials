@@ -117,9 +117,7 @@ class DatabaseManager:
                 f"The dirty database file '{self.dirty_file}' does not exist.\n"
                 f"Please run 'manager.initialize()' first to set up the database."
             )
-            raise FileNotFoundError(
-                msg
-            )
+            raise FileNotFoundError(msg)
         conn: sqlite3.Connection = sqlite3.connect(self.dirty_file)
         cursor: sqlite3.Cursor = conn.cursor()
         try:

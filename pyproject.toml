@@ -50,6 +50,8 @@ select = [
 ]
 ignore = [
     "COM812",
+    "E501", # Ignore long lines
+    "T201", # Allow print this is for a tutorial
 ]
 
 
@@ -74,6 +76,7 @@ build-backend = "hatchling.build"
     # The below are debateable
     "PLR2004", # Magic value used in comparison, ...
     "S311", # Standard pseudo-random generators are not suitable for cryptographic purposes
+
 ]
 
 [tool.ruff.lint.pydocstyle]
