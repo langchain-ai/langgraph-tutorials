@@ -41,7 +41,7 @@ class PolicyRetriever:
     def initialize(self) -> None:
         """Download FAQ content, split into sections, embed, and store in memory."""
         print(f"Fetching FAQ content from {self.FAQ_URL}...")
-        response = requests.get(self.FAQ_URL)
+        response = requests.get(self.FAQ_URL, timeout=10)
         response.raise_for_status()
         faq_text = response.text
 

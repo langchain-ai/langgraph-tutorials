@@ -48,7 +48,7 @@ class DatabaseManager:
     def _download_original(self) -> None:
         """Download the original database from the remote URL."""
         print("Downloading original database...")
-        response: requests.Response = requests.get(self.db_url)
+        response: requests.Response = requests.get(self.db_url, timeout=10)
         response.raise_for_status()
         with open(self.original_file, "wb") as f:
             f.write(response.content)
