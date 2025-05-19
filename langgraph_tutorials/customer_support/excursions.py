@@ -1,8 +1,11 @@
 """Information about excursions."""
 
+from langchain_core.tools import tool
+
 from langgraph_tutorials.customer_support.db import DB
 
 
+@tool
 def search_trip_recommendations(
     location: str | None = None,
     name: str | None = None,
@@ -43,6 +46,7 @@ def search_trip_recommendations(
         ]
 
 
+@tool
 def book_excursion(recommendation_id: int) -> str:
     """Book an excursion by its recommendation ID.
 
@@ -62,6 +66,7 @@ def book_excursion(recommendation_id: int) -> str:
         return f"No trip recommendation found with ID {recommendation_id}."
 
 
+@tool
 def update_excursion(recommendation_id: int, details: str) -> str:
     """Update a trip recommendation's details by its ID.
 
@@ -82,6 +87,7 @@ def update_excursion(recommendation_id: int, details: str) -> str:
         return f"No trip recommendation found with ID {recommendation_id}."
 
 
+@tool
 def cancel_excursion(recommendation_id: int) -> str:
     """Cancel a trip recommendation by its ID.
 

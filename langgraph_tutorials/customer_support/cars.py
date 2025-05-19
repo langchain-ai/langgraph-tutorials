@@ -1,8 +1,11 @@
 from datetime import date, datetime
 
+from langchain_core.tools import tool
+
 from langgraph_tutorials.customer_support.db import DB
 
 
+@tool
 def search_car_rentals(
     location: str | None = None,
     name: str | None = None,
@@ -43,6 +46,7 @@ def search_car_rentals(
         ]
 
 
+@tool
 def book_car_rental(rental_id: int) -> str:
     """Book a car rental by its ID.
 
@@ -59,6 +63,7 @@ def book_car_rental(rental_id: int) -> str:
         return f"No car rental found with ID {rental_id}."
 
 
+@tool
 def update_car_rental(
     rental_id: int,
     start_date: datetime | date | None = None,
@@ -93,7 +98,7 @@ def update_car_rental(
             return f"Car rental {rental_id} successfully updated."
         return f"No car rental found with ID {rental_id}."
 
-
+@tool
 def cancel_car_rental(rental_id: int) -> str:
     """Cancel a car rental by its ID.
 

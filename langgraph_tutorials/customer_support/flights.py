@@ -36,6 +36,7 @@ def fetch_user_flight_information(config: RunnableConfig) -> list[dict]:
         return [dict(zip(column_names, row, strict=False)) for row in rows]
 
 
+@tool
 def search_flights(
     departure_airport: str | None = None,
     arrival_airport: str | None = None,
@@ -73,6 +74,7 @@ def search_flights(
         return [dict(zip(column_names, row, strict=False)) for row in rows]
 
 
+@tool
 def update_ticket_to_new_flight(
     ticket_no: str, new_flight_id: int, *, config: RunnableConfig
 ) -> str:
@@ -131,6 +133,7 @@ def update_ticket_to_new_flight(
     return "Ticket successfully updated to new flight."
 
 
+@tool
 def cancel_ticket(ticket_no: str, *, config: RunnableConfig) -> str:
     """Cancel the user's ticket and remove it from the database."""
     configuration = config.get("configurable", {})
@@ -158,3 +161,4 @@ def cancel_ticket(ticket_no: str, *, config: RunnableConfig) -> str:
         cursor.execute("DELETE FROM ticket_flights WHERE ticket_no = ?", (ticket_no,))
 
     return "Ticket successfully cancelled."
+

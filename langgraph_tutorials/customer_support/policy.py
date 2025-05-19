@@ -10,7 +10,6 @@ import numpy as np
 import requests
 from langchain.embeddings import init_embeddings
 from langchain_core.embeddings import Embeddings
-from langchain_core.tools import BaseTool, tool
 
 
 class PolicyRetriever:
@@ -89,30 +88,3 @@ class PolicyRetriever:
         return [
             {**self._docs[idx], "similarity": scores[idx]} for idx in top_k_idx_sorted
         ]
-
-    def as_tool(self, k: int = 2) -> BaseTool:
-        """Return a LangChain tool for looking up policy information.
-
-        Args:
-            k (int, optional): Number of top documents to return in the tool.
-            Defaults to 2.
-
-        Returns:
-            Callable: A LangChain tool function.
-        """
-        retriever = self  # capture self in closure
-
-        @tool
-        def lookup_policy(query: str) -> str:
-            """Consult company policies to check whether certain options are permitted.
-
-            Args:
-                query (str): The user query about policy information.
-
-            Returns:
-                str: Concatenated content of the most relevant policy documents.
-            """
-            top_docs = retriever.query(query, k=k)
-            return "\n\n".join(doc["page_content"] for doc in top_docs)
-
-        return lookup_policy
